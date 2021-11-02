@@ -3,7 +3,7 @@ import pylab as plt
 
 
 
-data = pd.read_csv('dados.csv', delimiter=',', header=None)
+data = pd.read_csv('~/Documents/repo/yade/data/dados.csv', delimiter=',', header=None)
 
 print (data)
 
@@ -25,4 +25,3 @@ plt.title("Drag - Terminal Velocity")
 
 
 plt.show()
-

@@ -8,7 +8,7 @@ mat_madeira1=CohFrictMat(density=550,young=1.1e11,poisson=0.25,frictionAngle=0.4
 
 
 #cria esfera isolada
-esfera1=sphere(center=(0,-1.95,0.45),color=(1,1,1),radius=0.05,material=mat_madeira1,fixed=False,wire=True)
+esfera1=sphere(center=(0,-1.25,0.05),color=(1,1,1),radius=0.05,material=mat_madeira1,fixed=False,wire=True)
 
 #cria esferas em triangulo
 esfera2=sphere(center=(0,0.03,0.05),color=(1,0,1),radius=0.05,material=mat_madeira1,fixed=False,wire=True)
@@ -26,6 +26,8 @@ O.bodies.append(esfera5)
 O.bodies.append(esfera6)
 O.bodies.append(esfera7)
 
+
+
 #define quatro pontos formando um quadrado no plano z=0
 p1=[-1,1,0]
 p2=[-1,-2,0]
@@ -39,7 +41,8 @@ p4b=[1,1,0.4]
 
 p5=[1,-0.7,0]
 p6=[-1,-0.7,0]
-
+#p7=[-1.5,-0.1,1.0]
+#p8=[-1.5,0.1,1.0]
 
 #Cria faces do chao
 fchao=[]
@@ -70,13 +73,13 @@ fchao.append(f)
 
 
 #Cria rampa
-f3=facet([p2b,p3b,p5],wire=False,material=mat_madeira1,color=(0,0,1))
-f4=facet([p5,p6,p2b],wire=False,material=mat_madeira1,color=(1,0,1))
+#f3=facet([p2b,p3b,p5],wire=False,material=mat_madeira1,color=(0,0,1))
+#f4=facet([p5,p6,p2b],wire=False,material=mat_madeira1,color=(1,0,1))
 
 #Adiciona as faces na simulação
 O.bodies.append(fchao)
 
-O.bodies.append([f3,f4])
+#O.bodies.append([f3,f4])
 
 #O.engines contem as os modtores da simulacao
 O.engines=[
@@ -96,19 +99,17 @@ O.engines=[
 	#integracao das forcas
 	#damping eh o fator de amortecimento
 	NewtonIntegrator(gravity=(0,0,-9.81),damping=0.1),
-	PyRunner(command='minhafuncao(arq)',virtPeriod=0.1)
+	PyRunner(command='impulso()',virtPeriod=0.1)
 ]
 #calcula o tamanho do passo de tempo
 O.dt=(0.5*PWaveTimeStep())
 # salva o estado da simulacao para reiniciar de necessario
 O.saveTmp()
+#def cria_esferas():
+	#esfera1=sphere(center=(-1.45,0+random.uniform(-0.001,0.001),1.05),color=(1,1,1),radius=0.05,material=mat_madeira1)
+	#O.bodies.append(esfera1)
 
-
-arq = open("dados.csv", "w")
-
-def minhafuncao(arq):
-    e1=O.bodies[0]
-    e2=O.bodies[1]
-    v1=abs(e1.state.vel[2])
-    v2=abs(e2.state.vel[2])
-    arq.write(str(O.time)+", "+str(v1)+", "+str(v2)+"\n")
+def impulso():
+	e = O.bodies[0]
+	e.state.vel[1]=5.0
+	O.engines[4].dead=True
